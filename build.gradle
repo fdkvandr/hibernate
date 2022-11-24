@@ -1,0 +1,36 @@
+plugins {
+    id 'java'
+}
+
+group 'com.corp'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+java {
+    sourceCompatibility JavaVersion.VERSION_16
+    targetCompatibility JavaVersion.VERSION_16
+}
+
+dependencies {
+    // https://mvnrepository.com/artifact/org.hibernate/hibernate-core
+    implementation 'org.hibernate:hibernate-core:6.1.5.Final' // Нужен как на Compile phase так и на Runtime для тестов, поэтому Implemetnation
+
+    // https://mvnrepository.com/artifact/org.postgresql/postgresql
+    runtimeOnly 'org.postgresql:postgresql:42.5.1' // Нужен только на Runtime
+
+    // https://projectlombok.org/setup/gradle
+    compileOnly 'org.projectlombok:lombok:1.18.24' // Сами аннотации и его классы. Нужен только на Compile, т.к. аннотации пропадут после компиляции
+    annotationProcessor 'org.projectlombok:lombok:1.18.24' // Обрабатывает аннотации
+    testCompileOnly 'org.projectlombok:lombok:1.18.24' // Те же зависимости для тестов
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.24' // Те же зависимости для тестов
+
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.0'
+}
+
+test {
+    useJUnitPlatform()
+}
