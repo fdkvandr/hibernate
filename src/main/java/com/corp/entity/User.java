@@ -1,12 +1,11 @@
 package com.corp.entity;
 
+import com.corp.converter.BirthdayConverter;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor
@@ -20,8 +19,8 @@ public class User {
     private String username;
     private String firstname;
     private String lastname;
-    private LocalDate birthDate;
-    private Integer age;
+//    @Convert(converter = BirthdayConverter.class)
+    private Birthday birthDate;
     @Enumerated(EnumType.STRING)
     private Role role;
 }
