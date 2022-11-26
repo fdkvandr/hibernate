@@ -1,6 +1,9 @@
 package com.corp;
 
+import com.corp.entity.Role;
 import com.corp.entity.User;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy;
@@ -21,11 +24,12 @@ public class HibernateRunner {
             Session session = sessionFactory.openSession();
 
             User user = User.builder()
-                    .username("ivan1@gmail.com")
+                    .username("ivan@gmail.com")
                     .firstname("Ivan")
                     .lastname("Ivanov")
                     .birthDate(LocalDate.of(2000, 1, 19))
                     .age(20)
+                    .role(Role.ADMIN)
                     .build();
 
             session.beginTransaction();
