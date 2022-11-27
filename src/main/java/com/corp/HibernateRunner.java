@@ -1,52 +1,38 @@
 package com.corp;
 
-import com.corp.converter.BirthdayConverter;
-import com.corp.entity.Birthday;
-import com.corp.entity.Role;
 import com.corp.entity.User;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy;
-import org.hibernate.cfg.Configuration;
 
 import java.sql.SQLException;
-import java.time.LocalDate;
+
+import static com.corp.util.HibernateUtil.buildSessionFactory;
 
 public class HibernateRunner {
 
     public static void main(String[] args) throws SQLException {
 
-        Configuration configuration = new Configuration();
-        configuration.configure();
-        configuration.setPhysicalNamingStrategy(new CamelCaseToUnderscoresNamingStrategy());
-        configuration.addAnnotatedClass(User.class);
-        configuration.addAttributeConverter(BirthdayConverter.class);
-        try (SessionFactory sessionFactory = configuration.buildSessionFactory();
-            Session session = sessionFactory.openSession()) {
+        // user Transient по отношению к любой из двух сессий
+        User user = User.builder().username("ivan@gmail.com").firstname("Ivan").lastname("Ivanov").build();
 
-            User user = User.builder()
-                    .username("ivan9@gmail.com")
-                    .firstname("Ivan")
-                    .lastname("Ivanov")
-                    .birthDate(new Birthday(LocalDate.of(2000, 1, 19)))
-                    .role(Role.ADMIN)
-                    .info("""
-                          {
-                            "name" : "Ivan",
-                            "age" : 25
-                          }
-                          """)
-                    .build();
+        try (SessionFactory sessionFactory = buildSessionFactory()) {
+            try (Session session1 = sessionFactory.openSession()) {
+                session1.beginTransaction();
 
-            session.beginTransaction();
-            User user1 = session.get(User.class, "ivan8@gmail.com");
+                session1.saveOrUpdate(user); // user Persistent для session1 но Transient для session2
 
-            session.evict(user1);
-            User user2 = session.get(User.class, "ivan8@gmail.com");
-            user2.setLastname("Petrov"); // В БД обновится и запишиштся Petrov
-            session.flush();
-            session.isDirty();
-            session.getTransaction().commit();
+                session1.getTransaction().commit();
+            } // Сессия закрылась и user стал Detached по отношению к session1 но все еще Transient для session2
+
+            try (Session session2 = sessionFactory.openSession()) {
+                session2.beginTransaction();
+
+                user.setFirstname("Sveta"); // Установили имя Света, но пока еще не проассоциирован в persistentContext для session2, пока он Transient
+                //                session2.delete(user); // Сначала произойдет get() нашего user и он стание в состояние Persistent для session2
+                session2.refresh(user); // Происходит запрос в БД и мы все изменения из БД накладываем на нашего user, что добавляет его в PersistentContext, т.к. вначале был метод get()
+                session2.getTransaction()
+                        .commit(); // А теперь вызовется SQL delete, после чего он станет Removed по отношении к session2
+            }
         }
     }
 }
