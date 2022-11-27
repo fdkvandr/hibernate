@@ -25,8 +25,8 @@ dependencies {
     // https://mvnrepository.com/artifact/com.fasterxml.jackson.module/jackson-module-jakarta-xmlbind-annotations
     implementation 'com.fasterxml.jackson.module:jackson-module-jakarta-xmlbind-annotations:2.14.1'
 
-    // https://mvnrepository.com/artifact/org.slf4j/slf4j-api
-    implementation 'org.slf4j:slf4j-api:2.0.5'
+    // https://mvnrepository.com/artifact/org.slf4j/slf4j-log4j12
+    implementation 'org.slf4j:slf4j-log4j12:2.0.5'
 
     // https://mvnrepository.com/artifact/org.postgresql/postgresql
     runtimeOnly 'org.postgresql:postgresql:42.5.1' // Нужен только на Runtime
