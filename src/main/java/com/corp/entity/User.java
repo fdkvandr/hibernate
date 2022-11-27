@@ -20,7 +20,7 @@ public class User {
     private String username;
     private String firstname;
     private String lastname;
-    // @Convert(converter = BirthdayConverter.class)
+//    @Convert(converter = BirthdayConverter.class)
     private Birthday birthDate;
     @Enumerated(EnumType.STRING)
     private Role role;
