@@ -21,8 +21,8 @@ public class HibernateRunner {
         configuration.setPhysicalNamingStrategy(new CamelCaseToUnderscoresNamingStrategy());
         configuration.addAnnotatedClass(User.class);
         configuration.addAttributeConverter(BirthdayConverter.class);
-        try (SessionFactory sessionFactory = configuration.buildSessionFactory()) {
-            Session session = sessionFactory.openSession();
+        try (SessionFactory sessionFactory = configuration.buildSessionFactory();
+            Session session = sessionFactory.openSession()) {
 
             User user = User.builder()
                     .username("ivan9@gmail.com")
@@ -40,7 +40,12 @@ public class HibernateRunner {
 
             session.beginTransaction();
             User user1 = session.get(User.class, "ivan8@gmail.com");
-            System.out.println(user1);
+
+            session.evict(user1);
+            User user2 = session.get(User.class, "ivan8@gmail.com");
+            user2.setLastname("Petrov"); // В БД обновится и запишиштся Petrov
+            session.flush();
+            session.isDirty();
             session.getTransaction().commit();
         }
     }
