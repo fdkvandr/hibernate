@@ -1,14 +1,12 @@
 package com.corp.entity;
 
 import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
-
-import javax.persistence.*;
 
 @Data
 @NoArgsConstructor
@@ -16,7 +14,6 @@ import javax.persistence.*;
 @Builder
 @Entity
 @Table(name = "users", schema = "public")
-@TypeDef(name = "jsonBinary", typeClass = JsonBinaryType.class)
 public class User {
 
     @Id
@@ -27,8 +24,6 @@ public class User {
     private Birthday birthDate;
     @Enumerated(EnumType.STRING)
     private Role role;
-//    @Type(name = "com.vladmihalcea.hibernate.type.json.JsonBinaryType")
-//    @Type(type = "jsonBinary")
-    @Type(type = "jsonb")
+    @Type(JsonBinaryType.class)
     private String info;
 }

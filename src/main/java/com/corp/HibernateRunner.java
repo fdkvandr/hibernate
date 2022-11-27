@@ -4,7 +4,6 @@ import com.corp.converter.BirthdayConverter;
 import com.corp.entity.Birthday;
 import com.corp.entity.Role;
 import com.corp.entity.User;
-import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy;
@@ -22,12 +21,11 @@ public class HibernateRunner {
         configuration.setPhysicalNamingStrategy(new CamelCaseToUnderscoresNamingStrategy());
         configuration.addAnnotatedClass(User.class);
         configuration.addAttributeConverter(BirthdayConverter.class);
-        configuration.registerTypeOverride(new JsonBinaryType());
         try (SessionFactory sessionFactory = configuration.buildSessionFactory()) {
             Session session = sessionFactory.openSession();
 
             User user = User.builder()
-                    .username("ivan4@gmail.com")
+                    .username("ivan7@gmail.com")
                     .firstname("Ivan")
                     .lastname("Ivanov")
                     .birthDate(new Birthday(LocalDate.of(2000, 1, 19)))
