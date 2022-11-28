@@ -17,6 +17,9 @@ import org.hibernate.annotations.Type;
 public class User {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @Column(unique = true)
     private String username;
     @Embedded
     @AttributeOverride(name = "birthDate", column = @Column(name = "birth_date"))
