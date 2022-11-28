@@ -45,5 +45,25 @@ public class HibernateRunner {
             log.error("Exception occured", e);
             throw e;
         }
+
+        try (SessionFactory sessionFactory = buildSessionFactory(); Session session = sessionFactory.openSession()) {
+
+
+            PersonalInfo key = PersonalInfo.builder()
+                    .lastname("Petrov")
+                    .firstname("Petr")
+                    .birthDate(new Birthday(LocalDate.of(2001, 1, 1)))
+                    .build();
+
+
+            Transaction transaction = session.beginTransaction();
+
+            User user1 = session.get(User.class, key);
+
+            session.getTransaction().commit();
+
+            log.info("{}", user1);
+
+        }
     }
 }
