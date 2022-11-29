@@ -16,13 +16,22 @@ import org.hibernate.annotations.Type;
 @Table(name = "users", schema = "public")
 public class User {
 
-    @EmbeddedId
-    @AttributeOverride(name = "birthDate", column = @Column(name = "birth_date"))
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     private PersonalInfo personalInfo;
+
     @Column(unique = true)
     private String username;
+
     @Enumerated(EnumType.STRING)
     private Role role;
+
     @Type(JsonBinaryType.class)
     private String info;
+
+    @ManyToOne
+    @JoinColumn(name = "company_id")
+    private Company companyId;
 }

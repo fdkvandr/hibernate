@@ -1,6 +1,7 @@
 package com.corp;
 
 import com.corp.entity.Birthday;
+import com.corp.entity.Company;
 import com.corp.entity.PersonalInfo;
 import com.corp.entity.User;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +18,7 @@ import static com.corp.util.HibernateUtil.buildSessionFactory;
 public class HibernateRunner {
 
     public static void main(String[] args) throws SQLException {
+        Company company = Company.builder().name("Google").build();
 
         // user Transient по отношению к любой из двух сессий
         User user = User.builder()
@@ -26,43 +28,21 @@ public class HibernateRunner {
                         .firstname("Petr")
                         .birthDate(new Birthday(LocalDate.of(2001, 1, 1)))
                         .build())
+                .companyId(company)
                 .build();
         log.info("User entity is in transient state, object {}", user);
 
-        try (SessionFactory sessionFactory = buildSessionFactory()) {
-            Session session1 = sessionFactory.openSession();
-            try (session1) {
-                Transaction transaction = session1.beginTransaction();
-                log.trace("Transaction is created: {}", transaction);
-
-                session1.saveOrUpdate(user); // user Persistent для session1 но Transient для session2
-                log.trace("User is in prsistent state: {}, session {}", user, session1);
-
-                session1.getTransaction().commit();
-            } // Сессия закрылась и user стал Detached по отношению к session1 но все еще Transient для session2
-            log.warn("User is in detached state: {}, session is closed {}", user, session1);
-        } catch (Exception e) {
-            log.error("Exception occured", e);
-            throw e;
-        }
-
         try (SessionFactory sessionFactory = buildSessionFactory(); Session session = sessionFactory.openSession()) {
-
-
-            PersonalInfo key = PersonalInfo.builder()
-                    .lastname("Petrov")
-                    .firstname("Petr")
-                    .birthDate(new Birthday(LocalDate.of(2001, 1, 1)))
-                    .build();
-
 
             Transaction transaction = session.beginTransaction();
 
-            User user1 = session.get(User.class, key);
+            session.persist(company);
+            session.persist(user);
+
+            User user1 = session.get(User.class, 1L);
+            log.info("{}", user1);
 
             session.getTransaction().commit();
-
-            log.info("{}", user1);
 
         }
     }
