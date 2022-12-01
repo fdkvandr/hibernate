@@ -31,7 +31,7 @@ public class User {
     @Type(JsonBinaryType.class)
     private String info;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id")
     private Company companyId;
 }
