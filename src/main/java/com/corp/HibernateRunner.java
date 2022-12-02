@@ -22,13 +22,13 @@ public class HibernateRunner {
 
         // user Transient по отношению к любой из двух сессий
         User user = User.builder()
-                .username("petr2@gmail.com")
+                .username("petr12@gmail.com")
                 .personalInfo(PersonalInfo.builder()
                         .lastname("Petrov")
                         .firstname("Petr")
                         .birthDate(new Birthday(LocalDate.of(2001, 1, 1)))
                         .build())
-                .companyId(company)
+                .company(company)
                 .build();
         log.info("User entity is in transient state, object {}", user);
 
@@ -37,10 +37,12 @@ public class HibernateRunner {
             Transaction transaction = session.beginTransaction();
 
 //            session.persist(company);
-//            session.persist(user);
+//            session.evict(company);
+            session.persist(user);
 
-            User user1 = session.get(User.class, 1L);
+//            User user1 = session.get(User.class, 1L);
 //            log.info("{}", user1);
+//            user1.getCompany().getName();
 
             session.getTransaction().commit();
 

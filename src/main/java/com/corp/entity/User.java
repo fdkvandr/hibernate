@@ -33,5 +33,5 @@ public class User {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id")
-    private Company companyId;
+    private Company company;
 }
