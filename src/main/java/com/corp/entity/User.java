@@ -9,6 +9,7 @@ import org.hibernate.annotations.Type;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@EqualsAndHashCode(of = "username")
 @ToString(exclude = "company")
 @Entity
 @Table(name = "users", schema = "public")
@@ -20,7 +21,7 @@ public class User {
 
     private PersonalInfo personalInfo;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String username;
 
     @Enumerated(EnumType.STRING)

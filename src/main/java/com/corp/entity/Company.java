@@ -12,13 +12,14 @@ import java.util.Set;
 @AllArgsConstructor
 @Builder
 @ToString(exclude = "users")
-@EqualsAndHashCode(exclude = "users")
+@EqualsAndHashCode(of = "name")
 public class Company {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Column(nullable = false, unique = true)
     private String name;
 
     @Builder.Default
