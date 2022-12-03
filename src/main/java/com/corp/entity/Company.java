@@ -3,6 +3,7 @@ package com.corp.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -20,7 +21,13 @@ public class Company {
 
     private String name;
 
-    @OneToMany(mappedBy = "company", fetch = FetchType.LAZY)
-    private Set<User> users;
+    @Builder.Default
+    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL)
+    private Set<User> users = new HashSet<>();
+
+    public void addUser(User user) {
+        users.add(user);
+        user.setCompany(this);
+    }
 
 }

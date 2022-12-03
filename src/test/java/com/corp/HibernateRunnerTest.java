@@ -1,13 +1,11 @@
 package com.corp;
 
-import com.corp.entity.Birthday;
 import com.corp.entity.Company;
 import com.corp.entity.User;
 import com.corp.util.HibernateUtil;
 import jakarta.persistence.Column;
 import jakarta.persistence.Table;
 import lombok.Cleanup;
-import org.hibernate.Session;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Constructor;
@@ -17,13 +15,43 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.util.Arrays;
 
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.joining;
 
 class HibernateRunnerTest {
+
+    @Test
+    void deleteCompany() {
+        @Cleanup var sessionFactory = HibernateUtil.buildSessionFactory();
+        @Cleanup var session = sessionFactory.openSession();
+        session.beginTransaction();
+
+        Company company = session.get(Company.class, 9);
+
+        session.remove(company);
+
+        session.getTransaction().commit();
+    }
+
+    @Test
+    void addUserToNewCompany() {
+        @Cleanup var sessionFactory = HibernateUtil.buildSessionFactory();
+        @Cleanup var session = sessionFactory.openSession();
+        session.beginTransaction();
+
+        var company = Company.builder().name("Facebook").build();
+        var user = User.builder().username("sveta@gmail.com").build();
+
+        // user.setCompany(company);
+        // company.getUsers().add(user);
+        company.addUser(user);
+
+        session.persist(company);
+
+        session.getTransaction().commit();
+    }
 
     @Test
     void oneToMany() {
@@ -56,9 +84,7 @@ class HibernateRunnerTest {
     @Test
     void checkReflectionApi() {
 
-        User user = User.builder()
-                .username("ivan1@gmail.com")
-                                .build();
+        User user = User.builder().username("ivan1@gmail.com").build();
 
         String sql = """
                      insert into %s (%s) values (%s)
