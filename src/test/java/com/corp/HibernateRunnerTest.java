@@ -1,9 +1,13 @@
 package com.corp;
 
 import com.corp.entity.Birthday;
+import com.corp.entity.Company;
 import com.corp.entity.User;
+import com.corp.util.HibernateUtil;
 import jakarta.persistence.Column;
 import jakarta.persistence.Table;
+import lombok.Cleanup;
+import org.hibernate.Session;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Constructor;
@@ -20,6 +24,18 @@ import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.joining;
 
 class HibernateRunnerTest {
+
+    @Test
+    void oneToMany() {
+        @Cleanup var sessionFactory = HibernateUtil.buildSessionFactory();
+        @Cleanup var session = sessionFactory.openSession();
+        session.beginTransaction();
+
+        var company = session.get(Company.class, 7);
+        System.out.println();
+
+        session.getTransaction().commit();
+    }
 
     @Test
     void checkGetReflectionApi() throws SQLException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException, NoSuchFieldException {
@@ -42,10 +58,7 @@ class HibernateRunnerTest {
 
         User user = User.builder()
                 .username("ivan1@gmail.com")
-                .firstname("Ivan")
-                .lastname("Ivanov")
-                .birthDate(new Birthday(LocalDate.of(2000, 1, 19)))
-                .build();
+                                .build();
 
         String sql = """
                      insert into %s (%s) values (%s)
