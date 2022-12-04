@@ -29,9 +29,8 @@ class HibernateRunnerTest {
         try (var sessionFactory = HibernateUtil.buildSessionFactory(); var session = sessionFactory.openSession();) {
             session.beginTransaction();
 
-            User user = session.get(User.class, 16L);
+            User user = session.get(User.class, 17L);
             System.out.println(user);
-            System.out.println(user.getProfile());
 
             session.getTransaction().commit();
         }
@@ -42,13 +41,10 @@ class HibernateRunnerTest {
         try (var sessionFactory = HibernateUtil.buildSessionFactory(); var session = sessionFactory.openSession();) {
             session.beginTransaction();
 
-            User user = User.builder().username("test21@gmail.com").build();
-            Profile profile = Profile.builder().language("ru").street("Kilasa 18").build();
-            session.persist(user); // Обязаны сначала сохранить пользователя, чтобы получить айдишник, который генерится базой данных
-            profile.setUser(user); // Теперь мы можем только устанаваливать наш profile
-//            session.persist(profile); // И только теперь мы можем его сохранять
-
-            session.save(user);
+            User user = User.builder().username("test23@gmail.com").build();
+            Profile profile = Profile.builder().language("ru").street("Kilasa 23").build();
+            profile.setUser(user);
+            session.persist(user);
 
             session.getTransaction().commit();
         }

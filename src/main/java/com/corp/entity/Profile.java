@@ -12,7 +12,7 @@ import lombok.*;
 public class Profile {
 
     @Id
-    @Column(name = "user_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String street;
@@ -20,14 +20,12 @@ public class Profile {
     private String language;
 
     @OneToOne
-//    @JoinColumn(name = "user_id")
-    @PrimaryKeyJoinColumn
+    @JoinColumn(name = "user_id") // Даже не обязательно указывать
     private User user;
 
     public void setUser(User user) {
         user.setProfile(this);
         this.user = user;
-        this.id = user.getId();
     }
 
 }
