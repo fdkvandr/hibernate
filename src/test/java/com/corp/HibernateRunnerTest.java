@@ -26,6 +26,21 @@ import static java.util.stream.Collectors.joining;
 class HibernateRunnerTest {
 
     @Test
+    void localeInfo() {
+        try (var sessionFactory = HibernateUtil.buildSessionFactory(); var session = sessionFactory.openSession();) {
+            session.beginTransaction();
+
+
+            Company company = session.get(Company.class, 7L);
+//            company.getLocales().add(LocaleInfo.of("ru", "Описание на русском"));
+//            company.getLocales().add(LocaleInfo.of("en", "English description"));
+            System.out.println(company.getLocales());
+
+            session.getTransaction().commit();
+        }
+    }
+
+    @Test
     void checkManyToManySeparateEntity() {
         try (var sessionFactory = HibernateUtil.buildSessionFactory(); var session = sessionFactory.openSession();) {
             session.beginTransaction();
