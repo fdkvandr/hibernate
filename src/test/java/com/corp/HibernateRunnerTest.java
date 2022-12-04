@@ -1,12 +1,10 @@
 package com.corp;
 
-import com.corp.entity.Chat;
-import com.corp.entity.Company;
-import com.corp.entity.Profile;
-import com.corp.entity.User;
+import com.corp.entity.*;
 import com.corp.util.HibernateUtil;
 import jakarta.persistence.Column;
 import jakarta.persistence.Table;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.Cleanup;
 import org.junit.jupiter.api.Test;
 
@@ -17,6 +15,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.Set;
 
@@ -26,27 +25,20 @@ import static java.util.stream.Collectors.joining;
 class HibernateRunnerTest {
 
     @Test
-    void deleteChatFromUser() {
+    void checkManyToManySeparateEntity() {
         try (var sessionFactory = HibernateUtil.buildSessionFactory(); var session = sessionFactory.openSession();) {
             session.beginTransaction();
 
-            User user = session.get(User.class, 8L);
-            user.getChats().clear();
-            session.persist(user);
-
-            session.getTransaction().commit();
-        }
-    }
-
-    @Test
-    void checkManyToMany() {
-        try (var sessionFactory = HibernateUtil.buildSessionFactory(); var session = sessionFactory.openSession();) {
-            session.beginTransaction();
 
             User user = session.get(User.class, 8L);
-            Chat chat = Chat.builder().name("telegram").build();
-            user.addChat(chat);
-            session.persist(chat);
+            Chat chat = session.get(Chat.class, 3L);
+
+            UserChat userChat = UserChat.builder().createdAt(Instant.now()).createdBy(user.getUsername()).build();
+
+            userChat.setUser(user);
+            userChat.setChat(chat);
+
+            session.persist(userChat);
 
             session.getTransaction().commit();
         }
@@ -97,7 +89,7 @@ class HibernateRunnerTest {
             session.beginTransaction();
 
             company = session.get(Company.class, 7);
-//            company = session.getReference(Company.class, 7);
+            //            company = session.getReference(Company.class, 7);
 
             session.getTransaction().commit();
         }
