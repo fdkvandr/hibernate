@@ -1,6 +1,7 @@
 package com.corp.util;
 
 import com.corp.converter.BirthdayConverter;
+import com.corp.entity.Chat;
 import com.corp.entity.Company;
 import com.corp.entity.Profile;
 import com.corp.entity.User;
@@ -19,6 +20,7 @@ public class HibernateUtil {
         configuration.addAnnotatedClass(User.class);
         configuration.addAnnotatedClass(Company.class);
         configuration.addAnnotatedClass(Profile.class);
+        configuration.addAnnotatedClass(Chat.class);
         configuration.addAttributeConverter(BirthdayConverter.class);
 
         return configuration.buildSessionFactory();

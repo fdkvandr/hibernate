@@ -1,5 +1,6 @@
 package com.corp;
 
+import com.corp.entity.Chat;
 import com.corp.entity.Company;
 import com.corp.entity.Profile;
 import com.corp.entity.User;
@@ -23,6 +24,33 @@ import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.joining;
 
 class HibernateRunnerTest {
+
+    @Test
+    void deleteChatFromUser() {
+        try (var sessionFactory = HibernateUtil.buildSessionFactory(); var session = sessionFactory.openSession();) {
+            session.beginTransaction();
+
+            User user = session.get(User.class, 8L);
+            user.getChats().clear();
+            session.persist(user);
+
+            session.getTransaction().commit();
+        }
+    }
+
+    @Test
+    void checkManyToMany() {
+        try (var sessionFactory = HibernateUtil.buildSessionFactory(); var session = sessionFactory.openSession();) {
+            session.beginTransaction();
+
+            User user = session.get(User.class, 8L);
+            Chat chat = Chat.builder().name("telegram").build();
+            user.addChat(chat);
+            session.persist(chat);
+
+            session.getTransaction().commit();
+        }
+    }
 
     @Test
     void checkOneToOneGetUser() {
