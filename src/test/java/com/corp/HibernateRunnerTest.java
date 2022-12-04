@@ -17,6 +17,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.Instant;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 
 import static java.util.Optional.ofNullable;
@@ -93,7 +94,7 @@ class HibernateRunnerTest {
 
             session.getTransaction().commit();
         }
-        Set<User> users = company.getUsers();
+        List<User> users = company.getUsers();
         System.out.println(users.size());
     }
 
