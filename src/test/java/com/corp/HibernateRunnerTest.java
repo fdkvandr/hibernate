@@ -1,6 +1,7 @@
 package com.corp;
 
 import com.corp.entity.Company;
+import com.corp.entity.Profile;
 import com.corp.entity.User;
 import com.corp.util.HibernateUtil;
 import jakarta.persistence.Column;
@@ -22,6 +23,36 @@ import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.joining;
 
 class HibernateRunnerTest {
+
+    @Test
+    void checkOneToOneGetUser() {
+        try (var sessionFactory = HibernateUtil.buildSessionFactory(); var session = sessionFactory.openSession();) {
+            session.beginTransaction();
+
+            User user = session.get(User.class, 16L);
+            System.out.println(user);
+            System.out.println(user.getProfile());
+
+            session.getTransaction().commit();
+        }
+    }
+
+    @Test
+    void checkOneToOne() {
+        try (var sessionFactory = HibernateUtil.buildSessionFactory(); var session = sessionFactory.openSession();) {
+            session.beginTransaction();
+
+            User user = User.builder().username("test21@gmail.com").build();
+            Profile profile = Profile.builder().language("ru").street("Kilasa 18").build();
+            session.persist(user); // Обязаны сначала сохранить пользователя, чтобы получить айдишник, который генерится базой данных
+            profile.setUser(user); // Теперь мы можем только устанаваливать наш profile
+//            session.persist(profile); // И только теперь мы можем его сохранять
+
+            session.save(user);
+
+            session.getTransaction().commit();
+        }
+    }
 
     @Test
     void checkOrhanRemoval() {
