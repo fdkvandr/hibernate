@@ -24,19 +24,19 @@ public class Company {
 
     @Builder.Default
     @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true)
-    //    @OrderBy("username DESC, personalInfo.lastname ASC")
-    //    @OrderColumn(name = "id")
+    @MapKey(name = "username")
     @SortNatural
-    private SortedSet<User> users = new TreeSet<>();
+    private Map<String, User> users = new HashMap<>();
 
     @Builder.Default
     @ElementCollection
     @CollectionTable(name = "company_locale", joinColumns = @JoinColumn(name = "company_id"))
     @Column(name = "description")
-    private List<String> locales = new ArrayList<>();
+    @MapKeyColumn(name = "lang")
+    private Map<String, String> locales = new HashMap<>();
 
     public void addUser(User user) {
-        users.add(user);
+        users.put(user.getUsername(),user);
         user.setCompany(this);
     }
 

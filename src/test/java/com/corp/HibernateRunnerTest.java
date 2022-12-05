@@ -26,6 +26,18 @@ import static java.util.stream.Collectors.joining;
 class HibernateRunnerTest {
 
     @Test
+    void checkMap() {
+        try (var sessionFactory = HibernateUtil.buildSessionFactory(); var session = sessionFactory.openSession();) {
+            session.beginTransaction();
+
+            Company company = session.get(Company.class, 7L);
+            System.out.println(company.getUsers());
+
+            session.getTransaction().commit();
+        }
+    }
+
+    @Test
     void localeInfo() {
         try (var sessionFactory = HibernateUtil.buildSessionFactory(); var session = sessionFactory.openSession();) {
             session.beginTransaction();
@@ -92,7 +104,7 @@ class HibernateRunnerTest {
             session.beginTransaction();
 
             Company company = session.get(Company.class, 7);
-            company.getUsers().removeIf(user -> user.getId().equals(3L));
+//            company.getUsers().removeIf(user -> user.getId().equals(3L));
 
             session.getTransaction().commit();
         }
@@ -109,8 +121,8 @@ class HibernateRunnerTest {
 
             session.getTransaction().commit();
         }
-        List<User> users = company.getUsers();
-        System.out.println(users.size());
+//        List<User> users = company.getUsers();
+//        System.out.println(users.size());
     }
 
     @Test
