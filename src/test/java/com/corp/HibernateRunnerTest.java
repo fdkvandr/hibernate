@@ -1,6 +1,7 @@
 package com.corp;
 
 import com.corp.entity.*;
+import com.corp.util.HibernateTestUtil;
 import com.corp.util.HibernateUtil;
 import jakarta.persistence.Column;
 import jakarta.persistence.Table;
@@ -24,6 +25,18 @@ import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.joining;
 
 class HibernateRunnerTest {
+
+    @Test
+    void checkDockerDatabase() {
+        try (var sessionFactory = HibernateTestUtil.buildSessionFactory(); var session = sessionFactory.openSession();) {
+            session.beginTransaction();
+
+            Company company = Company.builder().name("Google").build();
+            session.persist(company);
+
+            session.getTransaction().commit();
+        }
+    }
 
     @Test
     void checkH2() {
