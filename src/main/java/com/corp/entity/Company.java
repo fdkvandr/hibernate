@@ -26,7 +26,7 @@ public class Company {
     @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true)
     @MapKey(name = "username")
     @SortNatural
-    private Map<String, User> users = new HashMap<>();
+    private Map<String, User> users = new TreeMap<>();
 
     @Builder.Default
     @ElementCollection

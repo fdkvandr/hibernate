@@ -30,8 +30,8 @@ public class User implements Comparable<User>{
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @Type(JsonBinaryType.class)
-    private String info;
+//    @Type(JsonBinaryType.class)
+//    private String info;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id")
