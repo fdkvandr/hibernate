@@ -13,7 +13,7 @@ import java.util.List;
 @Builder
 @EqualsAndHashCode(of = "name")
 @ToString(exclude = "userChats")
-public class Chat {
+public class Chat implements BaseEntity<Long>{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

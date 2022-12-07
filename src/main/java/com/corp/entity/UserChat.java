@@ -6,16 +6,13 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.Instant;
-import java.time.LocalDateTime;
-
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 @Builder
 @Table(name = "users_chat")
-public class UserChat {
+public class UserChat extends AuditableEntity<Long> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,18 +26,12 @@ public class UserChat {
     @JoinColumn(name = "chat_id")
     private Chat chat;
 
-    @Column(nullable = false)
-    private Instant createdAt;
-
-    @Column(nullable = false)
-    private String createdBy;
-
-    public void setUser (User user) {
+    public void setUser(User user) {
         this.user = user;
         this.user.getUserChats().add(this);
     }
 
-    public void setChat (Chat chat) {
+    public void setChat(Chat chat) {
         this.chat = chat;
         this.chat.getUserChats().add(this);
     }
