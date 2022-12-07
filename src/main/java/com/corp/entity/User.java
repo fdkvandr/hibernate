@@ -11,15 +11,14 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 @EqualsAndHashCode(of = "username")
 @ToString(exclude = {"company", "profile", "userChats"})
 @Entity
-@Table(name = "users", schema = "public")
-public class User implements Comparable<User>{
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+public abstract class User implements Comparable<User>{
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
     private PersonalInfo personalInfo;
@@ -42,7 +41,6 @@ public class User implements Comparable<User>{
     private Profile profile;
 
     @OneToMany(mappedBy = "user")
-    @Builder.Default
     private List<UserChat> userChats = new ArrayList<>();
 
     @Override

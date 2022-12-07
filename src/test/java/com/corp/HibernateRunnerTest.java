@@ -5,7 +5,6 @@ import com.corp.util.HibernateTestUtil;
 import com.corp.util.HibernateUtil;
 import jakarta.persistence.Column;
 import jakarta.persistence.Table;
-import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.Cleanup;
 import org.junit.jupiter.api.Test;
 
@@ -18,13 +17,43 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.Instant;
 import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
 
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.joining;
 
 class HibernateRunnerTest {
+
+    @Test
+    void checkTablePerClass() {
+        try (var sessionFactory = HibernateTestUtil.buildSessionFactory(); var session = sessionFactory.openSession();) {
+            session.beginTransaction();
+
+            Company google = Company.builder().name("Google").build();
+            session.persist(google);
+
+            Programmer programmer = Programmer.builder()
+                    .username("ivan@gmail.com")
+                    .language(Language.JAVA)
+                    .company(google)
+                    .build();
+            session.persist(programmer);
+
+            Manager manager = Manager.builder()
+                    .username("sveta@gmail.com")
+                    .projectName("Starter")
+                    .company(google)
+                    .build();
+            session.persist(manager);
+
+            session.flush();
+            session.clear();
+
+            Programmer programmer1 = session.get(Programmer.class, 1L);
+            User manager1 = session.get(User.class, 2L);
+
+            session.getTransaction().commit();
+        }
+    }
 
     @Test
     void checkDockerDatabase() {
@@ -69,8 +98,8 @@ class HibernateRunnerTest {
 
 
             Company company = session.get(Company.class, 7L);
-//            company.getLocales().add(LocaleInfo.of("ru", "Описание на русском"));
-//            company.getLocales().add(LocaleInfo.of("en", "English description"));
+            //            company.getLocales().add(LocaleInfo.of("ru", "Описание на русском"));
+            //            company.getLocales().add(LocaleInfo.of("en", "English description"));
             System.out.println(company.getLocales());
 
             session.getTransaction().commit();
@@ -86,12 +115,12 @@ class HibernateRunnerTest {
             User user = session.get(User.class, 8L);
             Chat chat = session.get(Chat.class, 3L);
 
-            UserChat userChat = UserChat.builder().createdAt(Instant.now()).createdBy(user.getUsername()).build();
+//            UserChat userChat = UserChat.builder().createdAt(Instant.now()).createdBy(user.getUsername()).build();
 
-            userChat.setUser(user);
-            userChat.setChat(chat);
-
-            session.persist(userChat);
+//            userChat.setUser(user);
+//            userChat.setChat(chat);
+//
+//            session.persist(userChat);
 
             session.getTransaction().commit();
         }
@@ -114,10 +143,10 @@ class HibernateRunnerTest {
         try (var sessionFactory = HibernateUtil.buildSessionFactory(); var session = sessionFactory.openSession();) {
             session.beginTransaction();
 
-            User user = User.builder().username("test23@gmail.com").build();
-            Profile profile = Profile.builder().language("ru").street("Kilasa 23").build();
-            profile.setUser(user);
-            session.persist(user);
+//            User user = User.builder().username("test23@gmail.com").build();
+//            Profile profile = Profile.builder().language("ru").street("Kilasa 23").build();
+//            profile.setUser(user);
+//            session.persist(user);
 
             session.getTransaction().commit();
         }
@@ -129,7 +158,7 @@ class HibernateRunnerTest {
             session.beginTransaction();
 
             Company company = session.get(Company.class, 7);
-//            company.getUsers().removeIf(user -> user.getId().equals(3L));
+            //            company.getUsers().removeIf(user -> user.getId().equals(3L));
 
             session.getTransaction().commit();
         }
@@ -146,8 +175,8 @@ class HibernateRunnerTest {
 
             session.getTransaction().commit();
         }
-//        List<User> users = company.getUsers();
-//        System.out.println(users.size());
+        //        List<User> users = company.getUsers();
+        //        System.out.println(users.size());
     }
 
     @Test
@@ -170,11 +199,11 @@ class HibernateRunnerTest {
         session.beginTransaction();
 
         var company = Company.builder().name("Facebook").build();
-        var user = User.builder().username("sveta@gmail.com").build();
+//        var user = User.builder().username("sveta@gmail.com").build();
 
         // user.setCompany(company);
         // company.getUsers().add(user);
-        company.addUser(user);
+//        company.addUser(user);
 
         session.persist(company);
 
@@ -212,40 +241,40 @@ class HibernateRunnerTest {
     @Test
     void checkReflectionApi() {
 
-        User user = User.builder().username("ivan1@gmail.com").build();
+//        User user = User.builder().username("ivan1@gmail.com").build();
 
-        String sql = """
-                     insert into %s (%s) values (%s)
-                     """;
-        String tableName = ofNullable(user.getClass()
-                .getAnnotation(Table.class)).map(tableAnnotation -> tableAnnotation.schema() + "." + tableAnnotation.name())
-                .orElse(user.getClass().getName());
-
-        Field[] declaredFields = user.getClass().getDeclaredFields();
-        String columnNames = Arrays.stream(declaredFields)
-                .map(field -> ofNullable(field.getAnnotation(Column.class)).map(Column::name)
-                        .orElse(field.getName()))
-                .collect(joining(","));
-
-        String columnValues = Arrays.stream(declaredFields)
-                .map(field -> "?")
-                .collect(joining(","));
-
-        System.out.println(sql.formatted(tableName, columnNames, columnValues));
-
-        Connection connection = null;
-
-        try (PreparedStatement preparedStatement = connection.prepareStatement(sql.formatted(tableName, columnNames, columnValues))) {
-            for (int i = 1; i <= declaredFields.length; i++) {
-                declaredFields[i].setAccessible(true);
-                try {
-                    preparedStatement.setObject(i, declaredFields[i].get(user));
-                } catch (IllegalAccessException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+//        String sql = """
+//                     insert into %s (%s) values (%s)
+//                     """;
+//        String tableName = ofNullable(user.getClass()
+//                .getAnnotation(Table.class)).map(tableAnnotation -> tableAnnotation.schema() + "." + tableAnnotation.name())
+//                .orElse(user.getClass().getName());
+//
+//        Field[] declaredFields = user.getClass().getDeclaredFields();
+//        String columnNames = Arrays.stream(declaredFields)
+//                .map(field -> ofNullable(field.getAnnotation(Column.class)).map(Column::name)
+//                        .orElse(field.getName()))
+//                .collect(joining(","));
+//
+//        String columnValues = Arrays.stream(declaredFields)
+//                .map(field -> "?")
+//                .collect(joining(","));
+//
+//        System.out.println(sql.formatted(tableName, columnNames, columnValues));
+//
+//        Connection connection = null;
+//
+//        try (PreparedStatement preparedStatement = connection.prepareStatement(sql.formatted(tableName, columnNames, columnValues))) {
+//            for (int i = 1; i <= declaredFields.length; i++) {
+//                declaredFields[i].setAccessible(true);
+//                try {
+//                    preparedStatement.setObject(i, declaredFields[i].get(user));
+//                } catch (IllegalAccessException e) {
+//                    throw new RuntimeException(e);
+//                }
+//            }
+//        } catch (SQLException e) {
+//            throw new RuntimeException(e);
+//        }
     }
 }

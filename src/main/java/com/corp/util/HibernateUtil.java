@@ -25,6 +25,8 @@ public class HibernateUtil {
         configuration.addAnnotatedClass(Profile.class);
         configuration.addAnnotatedClass(Chat.class);
         configuration.addAnnotatedClass(UserChat.class);
+        configuration.addAnnotatedClass(Programmer.class);
+        configuration.addAnnotatedClass(Manager.class);
         configuration.addAttributeConverter(BirthdayConverter.class);
         return configuration;
     }
