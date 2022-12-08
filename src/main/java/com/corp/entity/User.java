@@ -14,13 +14,12 @@ import java.util.List;
 @EqualsAndHashCode(of = "username")
 @ToString(exclude = {"company", "profile", "userChats"})
 @Entity
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "type")
+@Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "users")
 public abstract class User implements Comparable<User>{
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private PersonalInfo personalInfo;
