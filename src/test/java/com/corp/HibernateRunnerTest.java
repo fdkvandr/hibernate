@@ -4,8 +4,14 @@ import com.corp.entity.*;
 import com.corp.util.HibernateTestUtil;
 import com.corp.util.HibernateUtil;
 import jakarta.persistence.Column;
+import jakarta.persistence.FlushModeType;
+import jakarta.persistence.QueryHint;
 import jakarta.persistence.Table;
 import lombok.Cleanup;
+import org.hibernate.jpa.QueryHints;
+import org.hibernate.jpa.internal.HintsCollector;
+import org.hibernate.query.NativeQuery;
+import org.hibernate.query.Query;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Constructor;
@@ -17,11 +23,35 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.Instant;
 import java.util.Arrays;
+import java.util.List;
 
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.joining;
 
 class HibernateRunnerTest {
+
+    @Test
+    void checkHql() {
+        try (var sessionFactory = HibernateTestUtil.buildSessionFactory(); var session = sessionFactory.openSession();) {
+            session.beginTransaction();
+
+            String name = "Ivan";
+            List<User> list = session.createNamedQuery("findUserByName", User.class)
+                    .setParameter("firstname", name)
+                    .setParameter("companyName", "Google")
+                    .setFlushMode(FlushModeType.AUTO)
+                    .setHint(QueryHints.HINT_FETCH_SIZE, "50")
+                    .list();
+
+
+            int countRows = session.createQuery("UPDATE User u set u.role = 'ADMIN'").executeUpdate();
+
+            List<User> list1 = session.createNativeQuery("SELECT u.* from users u", User.class).list();
+
+
+            session.getTransaction().commit();
+        }
+    }
 
     @Test
     void checkTablePerClass() {
@@ -115,12 +145,12 @@ class HibernateRunnerTest {
             User user = session.get(User.class, 8L);
             Chat chat = session.get(Chat.class, 3L);
 
-//            UserChat userChat = UserChat.builder().createdAt(Instant.now()).createdBy(user.getUsername()).build();
+            //            UserChat userChat = UserChat.builder().createdAt(Instant.now()).createdBy(user.getUsername()).build();
 
-//            userChat.setUser(user);
-//            userChat.setChat(chat);
-//
-//            session.persist(userChat);
+            //            userChat.setUser(user);
+            //            userChat.setChat(chat);
+            //
+            //            session.persist(userChat);
 
             session.getTransaction().commit();
         }
@@ -143,10 +173,10 @@ class HibernateRunnerTest {
         try (var sessionFactory = HibernateUtil.buildSessionFactory(); var session = sessionFactory.openSession();) {
             session.beginTransaction();
 
-//            User user = User.builder().username("test23@gmail.com").build();
-//            Profile profile = Profile.builder().language("ru").street("Kilasa 23").build();
-//            profile.setUser(user);
-//            session.persist(user);
+            //            User user = User.builder().username("test23@gmail.com").build();
+            //            Profile profile = Profile.builder().language("ru").street("Kilasa 23").build();
+            //            profile.setUser(user);
+            //            session.persist(user);
 
             session.getTransaction().commit();
         }
@@ -199,11 +229,11 @@ class HibernateRunnerTest {
         session.beginTransaction();
 
         var company = Company.builder().name("Facebook").build();
-//        var user = User.builder().username("sveta@gmail.com").build();
+        //        var user = User.builder().username("sveta@gmail.com").build();
 
         // user.setCompany(company);
         // company.getUsers().add(user);
-//        company.addUser(user);
+        //        company.addUser(user);
 
         session.persist(company);
 
@@ -241,40 +271,40 @@ class HibernateRunnerTest {
     @Test
     void checkReflectionApi() {
 
-//        User user = User.builder().username("ivan1@gmail.com").build();
+        //        User user = User.builder().username("ivan1@gmail.com").build();
 
-//        String sql = """
-//                     insert into %s (%s) values (%s)
-//                     """;
-//        String tableName = ofNullable(user.getClass()
-//                .getAnnotation(Table.class)).map(tableAnnotation -> tableAnnotation.schema() + "." + tableAnnotation.name())
-//                .orElse(user.getClass().getName());
-//
-//        Field[] declaredFields = user.getClass().getDeclaredFields();
-//        String columnNames = Arrays.stream(declaredFields)
-//                .map(field -> ofNullable(field.getAnnotation(Column.class)).map(Column::name)
-//                        .orElse(field.getName()))
-//                .collect(joining(","));
-//
-//        String columnValues = Arrays.stream(declaredFields)
-//                .map(field -> "?")
-//                .collect(joining(","));
-//
-//        System.out.println(sql.formatted(tableName, columnNames, columnValues));
-//
-//        Connection connection = null;
-//
-//        try (PreparedStatement preparedStatement = connection.prepareStatement(sql.formatted(tableName, columnNames, columnValues))) {
-//            for (int i = 1; i <= declaredFields.length; i++) {
-//                declaredFields[i].setAccessible(true);
-//                try {
-//                    preparedStatement.setObject(i, declaredFields[i].get(user));
-//                } catch (IllegalAccessException e) {
-//                    throw new RuntimeException(e);
-//                }
-//            }
-//        } catch (SQLException e) {
-//            throw new RuntimeException(e);
-//        }
+        //        String sql = """
+        //                     insert into %s (%s) values (%s)
+        //                     """;
+        //        String tableName = ofNullable(user.getClass()
+        //                .getAnnotation(Table.class)).map(tableAnnotation -> tableAnnotation.schema() + "." + tableAnnotation.name())
+        //                .orElse(user.getClass().getName());
+        //
+        //        Field[] declaredFields = user.getClass().getDeclaredFields();
+        //        String columnNames = Arrays.stream(declaredFields)
+        //                .map(field -> ofNullable(field.getAnnotation(Column.class)).map(Column::name)
+        //                        .orElse(field.getName()))
+        //                .collect(joining(","));
+        //
+        //        String columnValues = Arrays.stream(declaredFields)
+        //                .map(field -> "?")
+        //                .collect(joining(","));
+        //
+        //        System.out.println(sql.formatted(tableName, columnNames, columnValues));
+        //
+        //        Connection connection = null;
+        //
+        //        try (PreparedStatement preparedStatement = connection.prepareStatement(sql.formatted(tableName, columnNames, columnValues))) {
+        //            for (int i = 1; i <= declaredFields.length; i++) {
+        //                declaredFields[i].setAccessible(true);
+        //                try {
+        //                    preparedStatement.setObject(i, declaredFields[i].get(user));
+        //                } catch (IllegalAccessException e) {
+        //                    throw new RuntimeException(e);
+        //                }
+        //            }
+        //        } catch (SQLException e) {
+        //            throw new RuntimeException(e);
+        //        }
     }
 }

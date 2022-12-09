@@ -8,6 +8,12 @@ import org.hibernate.annotations.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+@NamedQuery(name = "findUserByName", query =
+        "SELECT u " +
+        "FROM User u " +
+        "WHERE u.personalInfo.firstname = :firstname " +
+        "AND u.company.name = :companyName " +
+        "ORDER BY u.personalInfo.lastname DESC")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
