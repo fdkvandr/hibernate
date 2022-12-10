@@ -53,37 +53,37 @@ class HibernateRunnerTest {
         }
     }
 
-    @Test
-    void checkTablePerClass() {
-        try (var sessionFactory = HibernateTestUtil.buildSessionFactory(); var session = sessionFactory.openSession();) {
-            session.beginTransaction();
-
-            Company google = Company.builder().name("Google").build();
-            session.persist(google);
-
-            Programmer programmer = Programmer.builder()
-                    .username("ivan@gmail.com")
-                    .language(Language.JAVA)
-                    .company(google)
-                    .build();
-            session.persist(programmer);
-
-            Manager manager = Manager.builder()
-                    .username("sveta@gmail.com")
-                    .projectName("Starter")
-                    .company(google)
-                    .build();
-            session.persist(manager);
-
-            session.flush();
-            session.clear();
-
-            Programmer programmer1 = session.get(Programmer.class, 1L);
-            User manager1 = session.get(User.class, 2L);
-
-            session.getTransaction().commit();
-        }
-    }
+//    @Test
+//    void checkTablePerClass() {
+//        try (var sessionFactory = HibernateTestUtil.buildSessionFactory(); var session = sessionFactory.openSession();) {
+//            session.beginTransaction();
+//
+//            Company google = Company.builder().name("Google").build();
+//            session.persist(google);
+//
+//            Programmer programmer = Programmer.builder()
+//                    .username("ivan@gmail.com")
+//                    .language(Language.JAVA)
+//                    .company(google)
+//                    .build();
+//            session.persist(programmer);
+//
+//            Manager manager = Manager.builder()
+//                    .username("sveta@gmail.com")
+//                    .projectName("Starter")
+//                    .company(google)
+//                    .build();
+//            session.persist(manager);
+//
+//            session.flush();
+//            session.clear();
+//
+//            Programmer programmer1 = session.get(Programmer.class, 1L);
+//            User manager1 = session.get(User.class, 2L);
+//
+//            session.getTransaction().commit();
+//        }
+//    }
 
     @Test
     void checkDockerDatabase() {

@@ -8,6 +8,9 @@ import org.hibernate.annotations.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.corp.util.StringUtils.SPACE;
+
+
 @NamedQuery(name = "findUserByName", query =
         "SELECT u " +
         "FROM User u " +
@@ -22,7 +25,8 @@ import java.util.List;
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "users")
-public abstract class User implements Comparable<User>{
+@Builder
+public class User implements Comparable<User>{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,7 +34,7 @@ public abstract class User implements Comparable<User>{
 
     private PersonalInfo personalInfo;
 
-    @Column(unique = true, nullable = false)
+    @Column(unique = true)
     private String username;
 
     @Enumerated(EnumType.STRING)
@@ -47,11 +51,20 @@ public abstract class User implements Comparable<User>{
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Profile profile;
 
+    @Builder.Default
     @OneToMany(mappedBy = "user")
     private List<UserChat> userChats = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "receiver")
+    private List<Payment> payments = new ArrayList<>();
 
     @Override
     public int compareTo(User o) {
         return username.compareTo(o.username);
+    }
+
+    public String fullName() {
+        return getPersonalInfo().getFirstname() + SPACE + getPersonalInfo().getLastname();
     }
 }

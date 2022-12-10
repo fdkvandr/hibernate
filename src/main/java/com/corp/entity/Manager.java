@@ -19,10 +19,9 @@ public class Manager extends User {
 
     private String projectName;
 
-    @Builder
-    public Manager(Long id, PersonalInfo personalInfo, String username, Role role, String info, Company company, Profile profile, List<UserChat> userChats, String projectName) {
-        super(id, personalInfo, username, role, info, company, profile, userChats);
+//    @Builder
+    public Manager(Long id, PersonalInfo personalInfo, String username, Role role, String info, Company company, Profile profile, List<UserChat> userChats, List<Payment> payments, String projectName) {
+        super(id, personalInfo, username, role, info, company, profile, userChats, payments);
         this.projectName = projectName;
     }
-
 }
