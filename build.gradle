@@ -38,7 +38,7 @@ dependencies {
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.24' // Те же зависимости для тестов
 
     // https://mvnrepository.com/artifact/com.google.code.gson/gson
-    implementation 'com.google.code.gson:gson:2.8.9'
+    implementation 'com.google.code.gson:gson:2.10'
 
     // https://mvnrepository.com/artifact/com.h2database/h2
 //    testImplementation 'com.h2database:h2:2.1.214'
@@ -48,6 +48,8 @@ dependencies {
 
     // https://mvnrepository.com/artifact/org.assertj/assertj-core
     testImplementation 'org.assertj:assertj-core:3.23.1'
+
+    annotationProcessor 'org.hibernate:hibernate-jpamodelgen:6.1.5.Final'
 
     implementation 'com.googlecode.json-simple:json-simple:1.1.1'
 
