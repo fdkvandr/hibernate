@@ -1,6 +1,5 @@
 package com.corp.util;
 
-import com.corp.converter.BirthdayConverter;
 import com.corp.entity.*;
 import lombok.experimental.UtilityClass;
 import org.hibernate.SessionFactory;
@@ -25,10 +24,10 @@ public class HibernateUtil {
         configuration.addAnnotatedClass(Profile.class);
         configuration.addAnnotatedClass(Chat.class);
         configuration.addAnnotatedClass(UserChat.class);
-//        configuration.addAnnotatedClass(Programmer.class);
-//        configuration.addAnnotatedClass(Manager.class);
+        //        configuration.addAnnotatedClass(Programmer.class);
+        //        configuration.addAnnotatedClass(Manager.class);
         configuration.addAnnotatedClass(Payment.class);
-        configuration.addAttributeConverter(BirthdayConverter.class);
+        // configuration.addAttributeConverter(BirthdayConverter.class);
         return configuration;
     }
 }

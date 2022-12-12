@@ -1,6 +1,9 @@
 package com.corp.util;
 
-import com.corp.entity.*;
+import com.corp.entity.Company;
+import com.corp.entity.Payment;
+import com.corp.entity.PersonalInfo;
+import com.corp.entity.User;
 import lombok.Cleanup;
 import lombok.experimental.UtilityClass;
 import org.hibernate.Session;
@@ -56,7 +59,7 @@ public class TestDataImporter {
                 .personalInfo(PersonalInfo.builder()
                         .firstname(firstName)
                         .lastname(lastName)
-                        .birthDate(new Birthday(birthDate))
+                        .birthDate(birthDate)
                         .build())
                 .company(company)
                 .build();
