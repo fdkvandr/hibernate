@@ -1,5 +1,6 @@
 package com.corp.dao;
 
+import com.corp.dto.PaymentFilter;
 import com.corp.entity.Payment;
 import com.corp.entity.User;
 import com.corp.util.HibernateTestUtil;
@@ -118,7 +119,8 @@ class UserDaoTest {
         @Cleanup Session session = sessionFactory.openSession();
         session.beginTransaction();
 
-        Double averagePaymentAmount = userDao.findAveragePaymentAmountByFirstAndLastNames(session, "Bill", "Gates");
+        PaymentFilter filter = PaymentFilter.builder().lastName("Gates").firstName("Bill").build();
+        Double averagePaymentAmount = userDao.findAveragePaymentAmountByFirstAndLastNames(session, filter);
         assertThat(averagePaymentAmount).isEqualTo(200.0);
 
         session.getTransaction().commit();
