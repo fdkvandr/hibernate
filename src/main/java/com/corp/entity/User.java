@@ -6,7 +6,9 @@ import lombok.*;
 import org.hibernate.annotations.Type;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static com.corp.util.StringUtils.SPACE;
 
@@ -21,7 +23,7 @@ import static com.corp.util.StringUtils.SPACE;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "username")
-@ToString(exclude = {"company", "profile", "userChats"})
+@ToString(exclude = {"company", "payments", "userChats"})
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "users")
@@ -44,19 +46,19 @@ public class User implements Comparable<User>{
     @Column(columnDefinition = "jsonb")
     private String info;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "company_id")
     private Company company;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-    private Profile profile;
+    // @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    // private Profile profile;
 
     @Builder.Default
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private List<UserChat> userChats = new ArrayList<>();
 
     @Builder.Default
-    @OneToMany(mappedBy = "receiver")
+    @OneToMany(mappedBy = "receiver", fetch = FetchType.EAGER)
     private List<Payment> payments = new ArrayList<>();
 
     @Override

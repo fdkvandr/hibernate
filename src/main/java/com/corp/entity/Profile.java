@@ -24,7 +24,7 @@ public class Profile {
     private User user;
 
     public void setUser(User user) {
-        user.setProfile(this);
+        // user.setProfile(this);
         this.user = user;
     }
 

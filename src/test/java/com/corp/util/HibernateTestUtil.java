@@ -13,6 +13,9 @@ public class HibernateTestUtil {
     private static final PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres");
 
     static {
+        postgres.addEnv("DOCKER_HOST", "tcp://192.168.0.101:2375");
+        System.out.println(postgres.getHost());
+        System.out.println("1111111111111111111111111111111");
         postgres.start();
     }
 
