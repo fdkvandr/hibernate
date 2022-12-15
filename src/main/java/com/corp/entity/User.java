@@ -3,6 +3,7 @@ package com.corp.entity;
 import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Type;
 
 import java.util.ArrayList;
@@ -46,7 +47,7 @@ public class User implements Comparable<User>{
     @Column(columnDefinition = "jsonb")
     private String info;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id")
     private Company company;
 
@@ -54,11 +55,12 @@ public class User implements Comparable<User>{
     // private Profile profile;
 
     @Builder.Default
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<UserChat> userChats = new ArrayList<>();
 
     @Builder.Default
-    @OneToMany(mappedBy = "receiver", fetch = FetchType.EAGER)
+    @BatchSize(size = 3)
+    @OneToMany(mappedBy = "receiver", fetch = FetchType.LAZY)
     private List<Payment> payments = new ArrayList<>();
 
     @Override
