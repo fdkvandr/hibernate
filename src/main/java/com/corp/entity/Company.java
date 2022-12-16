@@ -14,7 +14,7 @@ import java.util.*;
 @Builder
 @ToString(exclude = "users")
 @EqualsAndHashCode(of = "name")
-@BatchSize(size = 3)
+// @BatchSize(size = 3)
 public class Company {
 
     @Id

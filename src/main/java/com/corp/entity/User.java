@@ -61,7 +61,7 @@ public class User implements Comparable<User>{
     private List<UserChat> userChats = new ArrayList<>();
 
     @Builder.Default
-    @Fetch(FetchMode.SUBSELECT)
+    // @Fetch(FetchMode.SUBSELECT)
     @OneToMany(mappedBy = "receiver", fetch = FetchType.LAZY)
     private List<Payment> payments = new ArrayList<>();
 

@@ -20,11 +20,10 @@ public class HibernateRunner {
             // User user = session.get(User.class, 1L);
             // System.out.println(user.getPayments().size());
             // System.out.println(user.getCompany().getName());
-            List<User> users = session.createQuery("select u from User u", User.class).list();
+            List<User> users = session.createQuery("SELECT u FROM User u JOIN FETCH u.payments JOIN FETCH u.company c", User.class).list();
 
-            users.get(0).getPayments().size();
-            // users.forEach(user -> user.getPayments().size());
-            // users.forEach(user -> user.getCompany().getName());
+            users.forEach(user -> user.getPayments().size());
+            users.forEach(user -> user.getCompany().getName());
 
             session.getTransaction().commit();
         }
