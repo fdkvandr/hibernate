@@ -3,25 +3,36 @@ package com.corp.entity;
 import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.BatchSize;
-import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.FetchProfile;
 import org.hibernate.annotations.Type;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import static com.corp.util.StringUtils.SPACE;
 
 
-@NamedQuery(name = "findUserByName", query =
-        "SELECT u " +
-        "FROM User u " +
-        "WHERE u.personalInfo.firstname = :firstname " +
-        "AND u.company.name = :companyName " +
-        "ORDER BY u.personalInfo.lastname DESC")
+@FetchProfile(name = "withCompany", fetchOverrides = {
+        @FetchProfile.FetchOverride(
+                entity = User.class,
+                association = "company",
+                mode = FetchMode.JOIN
+        )
+})
+@FetchProfile(name = "withCompanyAndPayments", fetchOverrides = {
+        @FetchProfile.FetchOverride(
+                entity = User.class,
+                association = "company",
+                mode = FetchMode.JOIN
+        ),
+        @FetchProfile.FetchOverride(
+                entity = User.class,
+                association = "payments",
+                mode = FetchMode.JOIN
+        )
+})
+@NamedQuery(name = "findUserByName", query = "SELECT u " + "FROM User u " + "WHERE u.personalInfo.firstname = :firstname " + "AND u.company.name = :companyName " + "ORDER BY u.personalInfo.lastname DESC")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -31,7 +42,7 @@ import static com.corp.util.StringUtils.SPACE;
 @Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "users")
 @Builder
-public class User implements Comparable<User>{
+public class User implements Comparable<User> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
