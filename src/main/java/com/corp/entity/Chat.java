@@ -23,6 +23,6 @@ public class Chat implements BaseEntity<Long>{
     private String name;
 
     @Builder.Default
-    @OneToMany(mappedBy = "chat")
+    @OneToMany(mappedBy = "chat", fetch = FetchType.LAZY)
     private List<UserChat> userChats = new ArrayList<>();
 }

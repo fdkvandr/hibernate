@@ -13,6 +13,19 @@ import java.util.List;
 import static com.corp.util.StringUtils.SPACE;
 
 
+@NamedEntityGraph(
+        name = "WithCompanyAndChat",
+        attributeNodes = {
+                @NamedAttributeNode("company"),
+                @NamedAttributeNode(value = "userChats", subgraph = "chats")
+        },
+        subgraphs = {
+                @NamedSubgraph(
+                        name = "chats",
+                        attributeNodes = @NamedAttributeNode("chat")
+                )
+        }
+)
 @FetchProfile(name = "withCompany", fetchOverrides = {
         @FetchProfile.FetchOverride(
                 entity = User.class,
