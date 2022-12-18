@@ -17,7 +17,7 @@ public class HibernateRunner {
              Session session = sessionFactory.openSession()) {
             session.beginTransaction();
 
-            Payment payment = session.find(Payment.class, 1L, LockModeType.OPTIMISTIC);
+            Payment payment = session.find(Payment.class, 1L);
 
             payment.setAmount(payment.getAmount() + 10);
 
