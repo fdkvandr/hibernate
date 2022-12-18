@@ -1,6 +1,8 @@
 package com.corp;
 
 import com.corp.entity.Payment;
+import com.corp.entity.Profile;
+import com.corp.entity.User;
 import com.corp.util.HibernateUtil;
 import jakarta.persistence.LockModeType;
 import lombok.extern.slf4j.Slf4j;
@@ -15,16 +17,14 @@ public class HibernateRunner {
 
     public static void main(String[] args) throws SQLException {
         try (SessionFactory sessionFactory = HibernateUtil.buildSessionFactory();
-             Session session = sessionFactory.openSession();) {
-            session.beginTransaction();
+             Session session = sessionFactory.openSession()) {
 
-            session.createNativeQuery("SET TRANSACTION READ ONLY;").executeUpdate();
-
-            // session.setDefaultReadOnly(true);
-            Payment payment = session.find(Payment.class, 1L);
-            payment.setAmount(payment.getAmount() + 10);
-
-            session.getTransaction().commit();
+            Profile profile = Profile.builder()
+                    .user(session.find(User.class, 1L))
+                    .language("ru")
+                    .street("Kolosa 28")
+                    .build();
+            session.save(profile);
         }
     }
 }
