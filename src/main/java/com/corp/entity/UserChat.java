@@ -1,5 +1,6 @@
 package com.corp.entity;
 
+import com.corp.listener.UserChatListener;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -10,6 +11,7 @@ import lombok.*;
 @EqualsAndHashCode(callSuper = false)
 @Builder
 @Table(name = "users_chat")
+@EntityListeners(UserChatListener.class)
 public class UserChat extends AuditableEntity<Long> {
 
     @Id
