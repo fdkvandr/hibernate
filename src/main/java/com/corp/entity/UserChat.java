@@ -11,7 +11,7 @@ import lombok.*;
 @EqualsAndHashCode(callSuper = false)
 @Builder
 @Table(name = "users_chat")
-@EntityListeners(UserChatListener.class)
+// @EntityListeners(UserChatListener.class)
 public class UserChat extends AuditableEntity<Long> {
 
     @Id
