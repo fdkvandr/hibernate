@@ -19,7 +19,7 @@ public class HibernateUtil {
         configuration.configure();
 
         SessionFactory sessionFactory = configuration.buildSessionFactory();
-        registerListeners(sessionFactory);
+        // registerListeners(sessionFactory);
 
         return sessionFactory;
 
@@ -47,7 +47,7 @@ public class HibernateUtil {
         //        configuration.addAnnotatedClass(Manager.class);
         configuration.addAnnotatedClass(Payment.class);
         // configuration.addAttributeConverter(BirthdayConverter.class);
-        configuration.setInterceptor(new GlobalInterceptor());
+        // configuration.setInterceptor(new GlobalInterceptor());
         return configuration;
     }
 }

@@ -1,22 +1,19 @@
 package com.corp.util;
 
-import com.corp.entity.Company;
-import com.corp.entity.Payment;
-import com.corp.entity.PersonalInfo;
-import com.corp.entity.User;
-import lombok.Cleanup;
+import com.corp.entity.*;
 import lombok.experimental.UtilityClass;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.Arrays;
 
 @UtilityClass
 public class DataImporter {
 
     public void importData(SessionFactory sessionFactory) {
-        @Cleanup Session session = sessionFactory.openSession();
+        Session session = sessionFactory.openSession();
         session.beginTransaction();
 
         Company microsoft = saveCompany(session, "Microsoft");
@@ -30,8 +27,8 @@ public class DataImporter {
         User dianeGreene = saveUser(session, "Diane", "Greene", LocalDate.of(1955, Month.JANUARY, 1), google);
 
         savePayment(session, billGates, 100);
-        savePayment(session, billGates, 200);
         savePayment(session, billGates, 300);
+        savePayment(session, billGates, 500);
 
         savePayment(session, steveJobs, 250);
         savePayment(session, steveJobs, 600);
@@ -47,19 +44,44 @@ public class DataImporter {
         savePayment(session, dianeGreene, 300);
         savePayment(session, dianeGreene, 300);
         savePayment(session, dianeGreene, 300);
+
+        Chat dmdev = saveChat(session, "dmdev");
+        Chat java = saveChat(session, "java");
+        Chat youtubeMembers = saveChat(session, "youtube-members");
+
+        addToChat(session, dmdev, billGates, steveJobs, sergeyBrin);
+        addToChat(session, java, billGates, steveJobs, timCook, dianeGreene);
+        addToChat(session, youtubeMembers, billGates, steveJobs, timCook, dianeGreene);
+
+        session.getTransaction().commit();
     }
 
-    private void savePayment(Session session, User user, Integer amount) {
-        Payment payment = Payment.builder().amount(amount).receiver(user).build();
-        session.persist(payment);
+    private void addToChat(Session session, Chat chat, User... users) {
+        Arrays.stream(users)
+                .map(user -> UserChat.builder().chat(chat).user(user).build()).forEach(session::persist);
     }
 
-    private User saveUser(Session session, String firstName, String lastName, LocalDate birthDate, Company company) {
+    private Chat saveChat(Session session, String chatName) {
+        Chat chat = Chat.builder().name(chatName).build();
+        session.persist(chat);
+
+        return chat;
+    }
+
+    private Company saveCompany(Session session, String name) {
+        Company company = Company.builder().name(name).build();
+        session.persist(company);
+
+        return company;
+    }
+
+    private User saveUser(Session session, String firstName, String lastName, LocalDate birthday, Company company) {
         User user = User.builder()
+                .username(firstName + lastName)
                 .personalInfo(PersonalInfo.builder()
                         .firstname(firstName)
                         .lastname(lastName)
-                        .birthDate(birthDate)
+                        .birthDate(birthday)
                         .build())
                 .company(company)
                 .build();
@@ -68,10 +90,8 @@ public class DataImporter {
         return user;
     }
 
-    private Company saveCompany(Session session, String name) {
-        Company company = Company.builder().name(name).build();
-        session.persist(company);
-
-        return company;
+    private void savePayment(Session session, User user, Integer amount) {
+        Payment payment = Payment.builder().receiver(user).amount(amount).build();
+        session.persist(payment);
     }
 }

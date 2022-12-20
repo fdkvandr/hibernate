@@ -16,6 +16,7 @@ java {
 
 dependencies {
     implementation 'org.hibernate:hibernate-core:6.1.5.Final'
+    implementation 'org.hibernate:hibernate-envers:6.1.5.Final'
     implementation 'com.vladmihalcea:hibernate-types-60:2.20.0'
     implementation 'com.fasterxml.jackson.module:jackson-module-jakarta-xmlbind-annotations:2.14.1'
 

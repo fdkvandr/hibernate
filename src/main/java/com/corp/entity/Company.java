@@ -2,10 +2,13 @@ package com.corp.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.SortNatural;
+import org.hibernate.envers.Audited;
+import org.hibernate.envers.NotAudited;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
 
 @Entity
 @Data
@@ -15,6 +18,7 @@ import java.util.*;
 @ToString(exclude = "users")
 @EqualsAndHashCode(of = "name")
 // @BatchSize(size = 3)
+@Audited()
 public class Company {
 
     @Id
@@ -24,6 +28,7 @@ public class Company {
     @Column(nullable = false, unique = true)
     private String name;
 
+    @NotAudited
     @Builder.Default
     @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true)
     @MapKey(name = "username")
@@ -35,10 +40,11 @@ public class Company {
     @CollectionTable(name = "company_locale", joinColumns = @JoinColumn(name = "company_id"))
     @Column(name = "description")
     @MapKeyColumn(name = "lang")
+    @NotAudited
     private Map<String, String> locales = new HashMap<>();
 
     public void addUser(User user) {
-        users.put(user.getUsername(),user);
+        users.put(user.getUsername(), user);
         user.setCompany(this);
     }
 

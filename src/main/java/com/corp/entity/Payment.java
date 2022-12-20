@@ -5,11 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.OptimisticLockType;
-import org.hibernate.annotations.OptimisticLocking;
-
-import java.time.Instant;
+import org.hibernate.envers.Audited;
 
 @Data
 @NoArgsConstructor
@@ -18,6 +14,7 @@ import java.time.Instant;
 @Entity
 // @OptimisticLocking(type = OptimisticLockType.DIRTY)
 // @DynamicUpdate
+@Audited
 public class Payment extends AuditableEntity<Long> {
 
     @Id
