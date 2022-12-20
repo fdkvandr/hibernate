@@ -1,6 +1,7 @@
 package com.corp.util;
 
 import com.corp.entity.*;
+import com.corp.interceptor.GlobalInterceptor;
 import com.corp.listener.AuditTableListener;
 import lombok.experimental.UtilityClass;
 import org.hibernate.SessionFactory;
@@ -46,6 +47,7 @@ public class HibernateUtil {
         //        configuration.addAnnotatedClass(Manager.class);
         configuration.addAnnotatedClass(Payment.class);
         // configuration.addAttributeConverter(BirthdayConverter.class);
+        configuration.setInterceptor(new GlobalInterceptor());
         return configuration;
     }
 }
