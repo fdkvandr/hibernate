@@ -26,25 +26,6 @@ public class HibernateRunner {
 
                 session.getTransaction().commit();
             }
-            try (Session session2 = sessionFactory.openSession()) {
-                session2.beginTransaction();
-
-                AuditReader auditReader = AuditReaderFactory.get(session2);
-                Payment oldPayment = auditReader.find(Payment.class, 1L, new Date(1671646533153L));
-                System.out.println(oldPayment.getReceiver().getUsername());
-
-                session2.replicate(oldPayment, ReplicationMode.OVERWRITE);
-
-                auditReader.createQuery()
-                        .forEntitiesAtRevision(Payment.class, 400L)
-                        .add(AuditEntity.property("amount").ge(450))
-                        .add(AuditEntity.property("id").ge(6L))
-                        .addProjection(AuditEntity.property("amount"))
-                        .addProjection(AuditEntity.id())
-                        .getResultList();
-
-                session2.getTransaction().commit();
-            }
         }
     }
 }
