@@ -1,8 +1,10 @@
 package com.corp.entity;
 
 import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
 import lombok.*;
-import org.hibernate.annotations.SortNatural;
+import org.hibernate.annotations.*;
+import org.hibernate.annotations.Cache;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.NotAudited;
 
@@ -19,6 +21,7 @@ import java.util.TreeMap;
 @EqualsAndHashCode(of = "name")
 // @BatchSize(size = 3)
 @Audited()
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Company {
 
     @Id
