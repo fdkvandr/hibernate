@@ -5,7 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
+import org.hibernate.annotations.Cache;
 
 @Data
 @NoArgsConstructor
@@ -15,6 +17,7 @@ import org.hibernate.envers.Audited;
 // @OptimisticLocking(type = OptimisticLockType.DIRTY)
 // @DynamicUpdate
 @Audited
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class Payment extends AuditableEntity<Long> {
 
     @Id
