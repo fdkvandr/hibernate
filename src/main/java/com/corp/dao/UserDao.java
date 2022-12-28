@@ -10,8 +10,6 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.hibernate.Session;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import static com.corp.entity.QCompany.company;
@@ -95,7 +93,8 @@ public class UserDao {
 
         return new JPAQuery<Payment>(session).select(payment)
                 .from(payment)
-                .join(payment.receiver, user).fetchJoin()
+                .join(payment.receiver, user)
+                .fetchJoin()
                 .join(user.company, company)
                 .where(company.name.eq(companyName))
                 .orderBy(user.personalInfo.firstname.asc(), payment.amount.asc())
