@@ -19,6 +19,7 @@ dependencies {
     implementation 'org.hibernate:hibernate-envers:6.1.5.Final'
     implementation 'com.vladmihalcea:hibernate-types-60:2.20.0'
     implementation 'com.fasterxml.jackson.module:jackson-module-jakarta-xmlbind-annotations:2.14.1'
+    implementation 'net.bytebuddy:byte-buddy:1.12.10'
 
     implementation 'org.hibernate:hibernate-jcache:6.1.5.Final'
     implementation 'org.ehcache:ehcache:3.10.8'

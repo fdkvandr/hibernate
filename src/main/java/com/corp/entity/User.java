@@ -18,6 +18,7 @@ import static com.corp.util.StringUtils.SPACE;
 
 
 @NamedEntityGraph(name = "WithCompanyAndChat", attributeNodes = {@NamedAttributeNode("company"), @NamedAttributeNode(value = "userChats", subgraph = "chats")}, subgraphs = {@NamedSubgraph(name = "chats", attributeNodes = @NamedAttributeNode("chat"))})
+@NamedEntityGraph(name = "WithCompany", attributeNodes = {@NamedAttributeNode("company")})
 @FetchProfile(name = "withCompany", fetchOverrides = {@FetchProfile.FetchOverride(entity = User.class, association = "company", mode = FetchMode.JOIN)})
 @FetchProfile(name = "withCompanyAndPayments", fetchOverrides = {@FetchProfile.FetchOverride(entity = User.class, association = "company", mode = FetchMode.JOIN), @FetchProfile.FetchOverride(entity = User.class, association = "payments", mode = FetchMode.JOIN)})
 @NamedQuery(name = "findUserByName", query = "SELECT u " + "FROM User u " + "WHERE u.personalInfo.firstname = :firstname " + "AND u.company.name = :companyName " + "ORDER BY u.personalInfo.lastname DESC")
@@ -32,7 +33,7 @@ import static com.corp.util.StringUtils.SPACE;
 @Builder
 @Audited
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE, region = "Users")
-public class User implements Comparable<User> {
+public class User implements Comparable<User>, BaseEntity<Long> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
