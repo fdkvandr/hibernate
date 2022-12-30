@@ -21,6 +21,10 @@ dependencies {
     implementation 'com.fasterxml.jackson.module:jackson-module-jakarta-xmlbind-annotations:2.14.1'
     implementation 'net.bytebuddy:byte-buddy:1.12.10'
 
+    implementation 'org.hibernate:hibernate-validator:8.0.0.Final'
+    implementation 'jakarta.el:jakarta.el-api:5.0.1'
+    implementation 'org.glassfish:jakarta.el:5.0.0-M1'
+
     implementation 'org.hibernate:hibernate-jcache:6.1.5.Final'
     implementation 'org.ehcache:ehcache:3.10.8'
 

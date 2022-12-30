@@ -1,6 +1,7 @@
 package com.corp.entity;
 
 import jakarta.persistence.Embeddable;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,5 +22,7 @@ public class PersonalInfo implements Serializable {
     private static final long serialVersionUID = 1230882411260746168L;
     private String firstname;
     private String lastname;
+
+    @NotNull
     private LocalDate birthDate;
 }

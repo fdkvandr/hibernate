@@ -55,7 +55,7 @@ public class HibernateRunner {
                     .lastname("Vanya")
                     .lastname("Ivanot")
                     .birthDate(LocalDate.now())
-                    .build(), "vanya2.gmail.com", null, Role.USER, 1);
+                    .build(), null, null, Role.USER, 1);
             userService.create(vanyaDto);
 
             // session.getTransaction().commit();
